@@ -1,0 +1,146 @@
+---
+title: "Untitled"
+author: "Xiaoyu Xu"
+date: "2022/2/16"
+output:
+  pdf_document:
+    latex_engine: pdflatex
+    number_sections: yes
+    keep_tex: true
+  html_document:
+    df_print: paged
+fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, comment = NA, message = FALSE, warning = FALSE)
+```
+
+# EDA
+```{r inputdata}
+GDP_raw <- read.csv("gdp-per-capita-worldbank.csv")
+edu_raw <- read.csv("total-government-expenditure-on-education-gdp.csv")
+health_raw <- read.csv("total-healthcare-expenditure-gdp.csv")
+poverty_raw <- read.csv("total-population-in-extreme-poverty.csv")
+military_raw <- read.csv("military-expenditure-share-gdp-sipri.csv")
+```
+
+```{r libraries}
+library(tidyverse)
+library(ggplot2)
+library(skimr)
+library(GGally)
+```
+
+
+```{r year}
+unique(edu_raw$Year)
+max(unique(edu_raw$Year))
+#latest 2019
+unique(health_raw$Year)
+max(unique(health_raw$Year))
+#latest 2018
+unique(GDP_raw$Year)
+max(unique(GDP_raw$Year))
+#latest 2020
+unique(poverty_raw$Year)
+max(unique(poverty_raw$Year))
+#latest 2019
+unique(military_raw$Year)
+max(unique(military_raw$Year))
+#latest 2019
+#choose 2018
+```
+```{r}
+temp <- edu_raw[-2] %>% 
+  inner_join(GDP_raw[-2], by = c("Entity", "Year")) %>%
+  inner_join(military_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(poverty_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(health_raw[-2], by = c("Entity", "Year")) %>% 
+  filter(Year == 2018) %>%
+  rename(c("Education" = names(.)[3], "GDP" = names(.)[4], "Military" = names(.)[5], "Poverty" = names(.)[6], "Health" = names(.)[7]))
+skim(temp)
+```
+```{r}
+#temp <- temp %>% 
+#  mutate(GDP = GDP/1e3, Poverty = Poverty/1e6)
+#scale large variable make no difference
+temp[-(1:2)] %>% 
+  ggpairs()
+```
+
+```{r}
+model1 <- lm(Poverty ~ .,data = temp[-c(1,2)])
+summary(model1)
+```
+```{r}
+temp2 <- edu_raw[-2] %>% 
+  inner_join(GDP_raw[-2], by = c("Entity", "Year")) %>%
+  inner_join(military_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(poverty_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(health_raw[-2], by = c("Entity", "Year")) %>% 
+  filter(Year %in% c(2010:2018)) %>%
+  rename(c("Education" = names(.)[3], "GDP" = names(.)[4], "Military" = names(.)[5], "Poverty" = names(.)[6], "Health" = names(.)[7]))
+skim(temp2)
+```
+```{r}
+temp2[-(1:2)] %>% 
+  ggpairs()
+```
+
+```{r}
+model2 <- lm(Poverty ~ .,data = temp2[-c(1,2)])
+summary(model2)
+```
+
+```{r}
+temp3 <- edu_raw[-2] %>% 
+  inner_join(GDP_raw[-2], by = c("Entity", "Year")) %>%
+  inner_join(military_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(poverty_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(health_raw[-2], by = c("Entity", "Year")) %>% 
+  filter(Year %in% c(2010:2018)) %>%
+  rename(c("Education" = names(.)[3], "GDP" = names(.)[4], "Military" = names(.)[5], "Poverty" = names(.)[6], "Health" = names(.)[7])) %>%
+  filter(Poverty < 2e8)
+skim(temp3)
+```
+
+```{r}
+temp3[-(1:2)] %>% 
+  ggpairs()
+```
+
+```{r}
+model3 <- lm(Poverty ~ .,data = temp3[-c(1,2)])
+summary(model3)
+```
+```{r}
+temp4 <- temp3
+temp4[3:7] <- log(temp4[3:7])
+model4 <- lm(Poverty ~ .,data = temp4[-c(1,2)])
+summary(model4)
+
+```
+
+```{r}
+temp5 <- edu_raw[-2] %>% 
+  inner_join(GDP_raw[-2], by = c("Entity", "Year")) %>%
+  inner_join(military_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(poverty_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(health_raw[-2], by = c("Entity", "Year")) %>% 
+  filter(Year %in% c(2012:2018)) %>%
+  rename(c("Education" = names(.)[3], "GDP" = names(.)[4], "Military" = names(.)[5], "Poverty" = names(.)[6], "Health" = names(.)[7])) %>%
+  filter(Poverty < 4e7)
+skim(temp5)
+```
+
+```{r}
+temp5[-(1:2)] %>% 
+  ggpairs()
+```
+
+```{r}
+model5 <- lm(Poverty ~ .,data = temp5[-c(1,2)])
+summary(model5)
+```
+
