@@ -30,6 +30,7 @@ library(tidyverse)
 library(ggplot2)
 library(skimr)
 library(GGally)
+library(olsrr)
 ```
 
 
@@ -142,5 +143,33 @@ temp5[-(1:2)] %>%
 ```{r}
 model5 <- lm(Poverty ~ .,data = temp5[-c(1,2)])
 summary(model5)
+```
+
+```{r}
+temp6 <- edu_raw[-2] %>% 
+  inner_join(GDP_raw[-2], by = c("Entity", "Year")) %>%
+  inner_join(military_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(poverty_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(health_raw[-2], by = c("Entity", "Year")) %>% 
+  filter(Year %in% c(2013:2018)) %>%
+  rename(c("Education" = names(.)[3], "GDP" = names(.)[4], "Military" = names(.)[5], "Poverty" = names(.)[6], "Health" = names(.)[7])) %>%
+  filter(Poverty < 4e7 & Military > 0 & Poverty > 0) %>% 
+  mutate_at((3:7), log)
+skim(temp6)
+```
+
+```{r}
+temp6[-(1:2)] %>% 
+  ggpairs()
+```
+
+
+```{r}
+model6 <- lm(Poverty ~ .,data = temp6[-c(1,2)])
+summary(model6)
+```
+```{r}
+model.selection<-ols_step_all_possible(model6)
+model.selection
 ```
 
