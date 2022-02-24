@@ -172,4 +172,40 @@ summary(model6)
 model.selection<-ols_step_all_possible(model6)
 model.selection
 ```
+```{r}
+population_of_poverty <- read.csv("distri...-dollars(1).csv")
+popultion_withoutregion <- population_of_poverty[,c(-1,-2)] 
+names(popultion_withoutregion)[2] <-"above 30$ a day"
+names(popultion_withoutregion)[3] <-"20-30$ a day"
+names(popultion_withoutregion)[4] <-"10-20$ a day"
+names(popultion_withoutregion)[5] <-"5.5-10$ a day"
+names(popultion_withoutregion)[6] <-"3.2-5.5$ a day"
+names(popultion_withoutregion)[7] <-"1.9-3.2$ a day"
+names(popultion_withoutregion)[8] <-"1-1.9$ a day"
+names(popultion_withoutregion)[9] <-"below 1$ a day"
+
+
+population_tidy <-  gather(data = popultion_withoutregion, 
+                    key = income_level,
+                    value = income_value,
+                    - Year) 
+unique(population_tidy$income_level)
+
+temp11 <- population_tidy %>%
+  group_by(Year,income_level) %>%
+  summarise(value = sum(income_value)) %>%
+  filter(Year == 2013 |Year == 2014 | Year == 2015 |Year == 2016 |Year == 2017 | Year == 2018 )
+
+ggplot(data = temp11,aes(x = Year, y = value,color = income_level)) +
+  geom_line()+ geom_point()+
+  labs(x = "Year", y = "Population",
+        title = "World income levels from 2013-2018") +
+  guides(color=guide_legend(title = "Income level"))
+
+ggplot(data = temp11,aes(x = Year, y = value,fill = income_level)) +
+  geom_area(alpha = 0.6)+
+  labs(x = "Year", y = "Population",
+        title = "World income levels from 2013-2018") +
+  guides(color=guide_legend(title = "Income level"))
+```
 
