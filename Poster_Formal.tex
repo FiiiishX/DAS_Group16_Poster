@@ -46,6 +46,16 @@
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -70,6 +80,8 @@
 \begin{document}
 \maketitle
 
+=======
+
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
@@ -82,8 +94,15 @@ GDP, and the total expenditure as a share of GDP for that year in health
 care, education, and military. In this report, we just focus on 2012 to
 2017. We will be discussing two questions: 1. What is the state of
 extreme poverty in the world? And the prediction of the population of
-extreme poverty. 2. How do these factors influence extreme poverty in
-the world?
+extreme poverty.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  How do these factors influence extreme poverty in the world?
+\end{enumerate}
 
 \hypertarget{exploratory-data-analysis}{%
 \section{Exploratory Data Analysis}\label{exploratory-data-analysis}}
@@ -91,6 +110,91 @@ the world?
 \hypertarget{what-is-the-state-of-extreme-poverty-in-the-world}{%
 \subsection{What is the state of extreme poverty in the
 world?}\label{what-is-the-state-of-extreme-poverty-in-the-world}}
+
+As defined by the World Bank, extreme poverty is the person who living
+on \$1.90 per day.
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.68\linewidth]{Poster_Formal_files/figure-latex/data process for question 1-1} 
+
+}
+
+\caption{\label{fig:Scatterplots} Scatterplots of 100 employees.}\label{fig:data process for question 1-1}
+\end{figure}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.68\linewidth]{Poster_Formal_files/figure-latex/data process for question 1-2} 
+
+}
+
+\caption{\label{fig:Scatterplots} Scatterplots of 100 employees.}\label{fig:data process for question 1-2}
+\end{figure}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.68\linewidth]{Poster_Formal_files/figure-latex/data process for question 1-3} 
+
+}
+
+\caption{\label{fig:Scatterplots} Scatterplots of 100 employees.}\label{fig:data process for question 1-3}
+\end{figure}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Data summary}\tabularnewline
+\toprule
+\endhead
+Name & data\_2012\_2017 \\
+Number of rows & 540 \\
+Number of columns & 7 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Column type frequency: & \\
+character & 2 \\
+numeric & 5 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Group variables & None \\
+\bottomrule
+\end{longtable}
+
+\textbf{Variable type: character}
+
+\begin{longtable}[]{@{}lrrrrrrr@{}}
+\toprule
+skim\_variable & n\_missing & complete\_rate & min & max & empty &
+n\_unique & whitespace \\
+\midrule
+\endhead
+Entity & 0 & 1 & 4 & 28 & 0 & 117 & 0 \\
+Poverty & 0 & 1 & 5485 & 5485 & 0 & 499 & 0 \\
+\bottomrule
+\end{longtable}
+
+\textbf{Variable type: numeric}
+
+\begin{longtable}[]{@{}lrrrrrrrrrl@{}}
+\toprule
+skim\_variable & n\_missing & complete\_rate & mean & sd & p0 & p25 &
+p50 & p75 & p100 & hist \\
+\midrule
+\endhead
+Year & 0 & 1 & 2014.50 & 1.72 & 2012.00 & 2013.00 & 2014.00 & 2016.00 &
+2017.00 & ▇▃▃▃▅ \\
+Education & 0 & 1 & 4.56 & 1.51 & 1.45 & 3.49 & 4.63 & 5.47 & 8.49 &
+▃▆▇▃▂ \\
+GDP & 0 & 1 & 20054.12 & 19532.51 & 773.57 & 3600.16 & 12699.73 &
+30840.84 & 112308.17 & ▇▃▂▁▁ \\
+Military & 0 & 1 & 1.51 & 1.05 & 0.00 & 0.93 & 1.26 & 1.80 & 5.75 &
+▇▇▁▁▁ \\
+Health & 0 & 1 & 6.78 & 2.53 & 1.22 & 4.94 & 6.74 & 8.52 & 19.73 &
+▃▇▃▁▁ \\
+\bottomrule
+\end{longtable}
+
+\hypertarget{exploratory-data-analysis-1}{%
+\section{Exploratory Data Analysis}\label{exploratory-data-analysis-1}}
+
+\hypertarget{what-is-the-state-of-extreme-poverty-in-the-world-1}{%
+\subsection{What is the state of extreme poverty in the
+world?}\label{what-is-the-state-of-extreme-poverty-in-the-world-1}}
 
 As defined by the World Bank, extreme poverty
 

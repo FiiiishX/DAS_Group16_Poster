@@ -173,6 +173,7 @@ summary(model6)
 ```{r}
 model.selection<-ols_step_all_possible(model6)
 model.selection
+get_regression_table()
 ```
 
 
