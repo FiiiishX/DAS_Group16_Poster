@@ -17,17 +17,69 @@ knitr::opts_chunk$set(echo = FALSE, comment = NA, message = FALSE, warning = FAL
 ```
 
 # EDA
-```{r inputdata}
-GDP_raw <- read.csv("gdp-per-capita-worldbank.csv")
-edu_raw <- read.csv("total-government-expenditure-on-education-gdp.csv")
-health_raw <- read.csv("total-healthcare-expenditure-gdp.csv")
-poverty_raw <- read.csv("total-population-in-extreme-poverty.csv")
-military_raw <- read.csv("military-expenditure-share-gdp-sipri.csv")
-```
-
 ```{r libraries}
 library(tidyverse)
 library(ggplot2)
 library(skimr)
 library(GGally)
 library(olsrr)
+```
+
+```{r inputdata}
+# load data from csv files
+GDP_raw <- read.csv("gdp-per-capita-worldbank.csv")
+edu_raw <- read.csv("total-government-expenditure-on-education-gdp.csv")
+health_raw <- read.csv("total-healthcare-expenditure-gdp.csv")
+poverty_population_raw <- read.csv("distri...-dollars.csv")
+military_raw <- read.csv("military-expenditure-share-gdp-sipri.csv")
+```
+
+```{r data process for question 1}
+# Rename the columns in Poverty population data set
+poverty_population <- poverty_population_raw %>% 
+  rename(c("above 30$ a day" = names(.)[4], "20-30$ a day" = names(.)[5], "10-20$ a day" = names(.)[6], "5.5-10$ a day" = names(.)[7], "3.2-5.5$ a day" = names(.)[8], "1.9-3.2$ a day" = names(.)[9], "1-1.9$ a day" = names(.)[10], "below 1$ a day" = names(.)[11]))
+
+poverty_population_for_plot <- poverty_population %>% 
+  select(3:11) %>% 
+  gather(key = income_level, 
+         value = income_value, 
+         - Year) %>% 
+  group_by(Year,income_level) %>%
+  summarise(value = sum(income_value)) %>%
+  filter(Year %in% c(2012:2017))
+
+ggplot(data = poverty_population_for_plot,aes(x = Year, y = value,color = income_level)) +
+  geom_line()+ geom_point()+
+  labs(x = "Year", y = "Population",
+        title = "World income levels from 2013-2018") +
+  guides(color=guide_legend(title = "Income level"))
+
+ggplot(data = poverty_population_for_plot,aes(x = Year, y = value,fill = income_level)) +
+  geom_area(alpha = 0.6)+
+  labs(x = "Year", y = "Population",
+        title = "World income levels from 2013-2018") +
+  guides(color=guide_legend(title = "Income level"))
+
+```
+
+
+
+```{r }
+#Generate a column representing the population that live on less than 1.9$ per day
+poverty_raw <- poverty_raw %>% 
+  mutate("below 1.9$ a day" = .[10] + .[11])
+# join data.frames together and renames; select the data from 2012 to 2017 to make further analyze.
+data_2012_2017 <- edu_raw[-2] %>% 
+  inner_join(GDP_raw[-2], by = c("Entity", "Year")) %>%
+  inner_join(military_raw[-2],by = c("Entity", "Year")) %>% 
+  inner_join(poverty_raw[c(1,3,12)],by = c("Entity", "Year")) %>% 
+  inner_join(health_raw[-2], by = c("Entity", "Year")) %>% 
+  rename(c("Education" = names(.)[3], "GDP" = names(.)[4], "Military" = names(.)[5], "Poverty" = names(.)[6], "Health" = names(.)[7])) %>% 
+  filter(Year %in% c(2012:2017))
+skim(data_2012_2017)
+```
+
+```{r}
+
+```
+
