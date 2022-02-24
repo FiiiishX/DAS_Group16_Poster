@@ -16,12 +16,20 @@ fig_caption: yes
 knitr::opts_chunk$set(echo = FALSE, comment = NA, message = FALSE, warning = FALSE)
 ```
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 90d586e3d21d39444cd82231273b1e4014a8624d
 ```{r libraries}
 library(tidyverse)
 library(ggplot2)
 library(skimr)
 library(GGally)
 library(olsrr)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 90d586e3d21d39444cd82231273b1e4014a8624d
 ```
 
 ```{r inputdata}
@@ -37,9 +45,19 @@ military_raw <- read.csv("military-expenditure-share-gdp-sipri.csv")
 Most people in the world are in the poverty. This analysis is aim to explore the global extreme poverty, which is considered a person if they live on less than 1.90 dollars per day, defined by the United Nation. 
 We have used 5 data sets to analyze extreme poverty. The distribution of population between different poverty thresholds from 1981 to 2017, total GDP, and the total expenditure as a share of GDP for that year in health care, education, and military. In this report, we just focus on 2012 to 2017. We will be discussing two questions:
 1. What is the state of extreme poverty in the world? And the prediction of the population of extreme poverty.
+<<<<<<< HEAD
 2. How do these factors influence extreme poverty in the world?
 
 
+=======
+2. How do these factors influence extreme poverty in the world? 
+
+
+# Exploratory Data Analysis  
+## What is the state of extreme poverty in the world?
+As defined by the World Bank, extreme poverty is the person who living on $1.90 per day.
+
+>>>>>>> 90d586e3d21d39444cd82231273b1e4014a8624d
 ```{r data process for question 1}
 # Rename the columns in Poverty population data set
 poverty_population <- poverty_population_raw %>% 
@@ -85,8 +103,15 @@ data_2012_2017 <- edu_raw[-2] %>%
 skim(data_2012_2017)
 ```
 
+<<<<<<< HEAD
 
 # Exploratory Data Analysis  
 ## What is the state of extreme poverty in the world?
 As defined by the World Bank, extreme poverty 
 
+=======
+
+
+
+
+>>>>>>> 90d586e3d21d39444cd82231273b1e4014a8624d
