@@ -14,6 +14,7 @@ fig_caption: yes
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, comment = NA, message = FALSE, warning = FALSE)
+
 ```
 
 
@@ -43,21 +44,20 @@ military_raw <- read.csv("military-expenditure-share-gdp-sipri.csv")
 Most people in the world are in the poverty. This analysis is aim to explore the global extreme poverty, which is considered a person if they live on less than 1.90 dollars per day, defined by the United Nation. 
 We have used 5 data sets to analyze extreme poverty. The distribution of population between different poverty thresholds from 1981 to 2017, total GDP, and the total expenditure as a share of GDP for that year in health care, education, and military. In this report, we just focus on 2012 to 2017. We will be discussing two questions:
 1. What is the state of extreme poverty in the world? And the prediction of the population of extreme poverty.
-
 2. How do these factors influence extreme poverty in the world?
 
 
 # Exploratory Data Analysis  
 ## What is the state of extreme poverty in the world?
-As defined by the World Bank, extreme poverty is the person who living on $1.90 per day.
 
+As defined by the World Bank, extreme poverty is the person who living on $1.90 per day. From the figure 1 we can know that the government has made great efforts to reduce the number of people living in extreme poverty. Between 1980 and 2017, the number of people living in extreme poverty in the world has been decreasing.
 
-```{r data process for question 1,out.width = '68%', fig.align = "center", fig.cap = "\\label{fig:Scatterplots} Scatterplots of 100 employees.",fig.pos = 'H'}
-# Rename the columns in Poverty population data set
+```{r table1,out.width = '68%', fig.align = "center",fig.cap = "\\label{fig:line} line chart of 100 employees.", fig.pos = 'H'}
+
 poverty_population <- poverty_population_raw %>% 
   rename(c("above 30$ a day" = names(.)[4], "20-30$ a day" = names(.)[5], "10-20$ a day" = names(.)[6], "5.5-10$ a day" = names(.)[7], "3.2-5.5$ a day" = names(.)[8], "1.9-3.2$ a day" = names(.)[9], "1-1.9$ a day" = names(.)[10], "below 1$ a day" = names(.)[11]))
 
-## Create two column which divide dataset into two category 
+## Create two column which divide data set into two category 
 poverty_population$`Number of people not in extreme poverty` <- poverty_population$`above 30$ a day`+poverty_population$`20-30$ a day`+poverty_population$`10-20$ a day`+poverty_population$`5.5-10$ a day`+poverty_population$`3.2-5.5$ a day`+poverty_population$`1.9-3.2$ a day`
 poverty_population$`Number of peopole in extreme poverty` <- poverty_population$`1-1.9$ a day`+poverty_population$`below 1$ a day`
 
@@ -67,27 +67,52 @@ poverty_population_for_plot <- poverty_population %>%
          value = income_value, 
          - Year) %>% 
   group_by(Year,income_level) %>%
-  summarise(value = sum(income_value)) 
-  ##filter(Year %in% c(2012:2017))
+  summarise(value = sum(income_value)) %>%
+  filter(Year %in% c(1980:2017)) 
 
 ggplot(data = poverty_population_for_plot,aes(x = Year, y = value,color = income_level)) +
   geom_line()+ geom_point()+
   labs(x = "Year", y = "Population",
-        title = "World income levels from 2013-2018") +
+        title = "World income levels from 1981-2017") +
   guides(color=guide_legend(title = "Income level"))
 
-ggplot(data = poverty_population_for_plot,aes(x = Year, y = value,fill = income_level)) +
-  geom_area(alpha = 0.6)+
-  labs(x = "Year", y = "Population",
-        title = "World income levels from 2013-2018") +
-  guides(color=guide_legend(title = "Income level"))
 
-ggplot(data = poverty_population_for_plot,aes(x = Year, y = value,fill = income_level)) +
-  geom_col(position = 'fill', stat = "identity",width = 0.6)+
-  labs(x = "Year", y = "Population",
-        title = "World income levels from 2013-2018") +
-  guides(color=guide_legend(title = "Income level"))
+```
 
+
+
+```{r creat modle, echo=FALSE, fig.width=13,fig.align='center', fig.cap="\\label{fig:resids} Scatterplots of the residuals by working years and a histogram of the residuals (right).", fig.pos = "H"}
+## create a linear model
+
+poverty_population_inep <- poverty_population_for_plot %>%
+  filter(income_level == 'Number of peopole in extreme poverty')
+ 
+poverty_population_inep <- poverty_population_inep[,-2]
+
+
+modela <- lm(value ~ Year, data = poverty_population_inep)
+get_regression_table(modela)
+
+modela1 <- lm(log(value) ~ log(Year), data = poverty_population_inep)
+get_regression_table(modela1)
+predict.value <- as.data.frame(predict(modela,point,interval="prediction",level=0.99))
+
+point<-data.frame(Year = seq(1981,2038,1))
+predict.value <- as.data.frame(predict(modela,point,interval="prediction",level=0.99))
+new <- data.frame(point,value = predict.value$fit,stringsAsFactors = FALSE)
+plot(modela)
+
+predict.value1 <- as.data.frame(predict(modela1,point,interval="prediction",level=0.99))
+new1 <- data.frame(point,value = predict.value1$fit,stringsAsFactors = FALSE)
+
+
+ggplot() + geom_area(data = new,aes(x = Year, y = value),fill = "red",alpha = 0.3)+
+  geom_area(data = poverty_population_inep,aes(x = Year, y = value),fill = "skyblue",alpha = 0.8)+
+ theme_bw()
+
+
+ggplot() + geom_line(data = new1,aes(x = Year, y = value),fill = "red",alpha = 0.3)
+ 
 
 
 ```

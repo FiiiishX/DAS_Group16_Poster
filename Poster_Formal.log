@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.2.24)  24 FEB 2022 16:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.2.25)  25 FEB 2022 10:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **Poster_Formal.tex
 (./Poster_Formal.tex
 LaTeX2e <2021-11-15> patch level 1
-L3 programming layer <2022-02-21> (c:/Users/zhaohan wang/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/article.cls
+L3 programming layer <2022-02-24> (c:/Users/zhaohan wang/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
 (c:/Users/zhaohan wang/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size10.clo
 File: size10.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
@@ -467,13 +467,13 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.117 \begin{figure}[H]
+l.113 \begin{figure}[H]
                         
 Here is how much of TeX's memory you used:
- 11026 strings out of 480238
- 173651 string characters out of 5893681
- 453147 words of memory out of 5000000
- 28819 multiletter control sequences out of 15000+600000
+ 11026 strings out of 480236
+ 173651 string characters out of 5893624
+ 454181 words of memory out of 5000000
+ 28821 multiletter control sequences out of 15000+600000
  499518 words of font info for 50 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  60i,6n,63p,376b,288s stack positions out of 5000i,500n,10000p,200000b,80000s
